@@ -1,0 +1,55 @@
+{ "form":"profile",
+  "action":"/profile.php",
+  "method":"POST",
+  "items":[
+	{"name":"username", "prefix":"Username", "required":"yes", "list":"users", "autocomplete":"false"},
+	{"name":"password", "type":"password", "prefix":"Password", "value":false, "autocomplete":"false"},
+	{"name":"password-confirm", "type":"password", "value":false, "prefix":"Confirm"},
+	{"name":"role", "type":"tag-it", "prefix":"Roles", "list":"roles"},
+	{"name":"group", "type":"tag-it", "prefix":"Groups", "list":"groups"},
+	{"name":"jobtitle", "type":"text", "prefix":"Jobtitle"},
+	{"name":"member-since", "type":"date", "prefix":"Member since", "placeholder":"01-02-2015", "maxDate":"today"},
+	"<!--divider-->",
+	{"name":"name","type":"set","items":[
+			{"name":"title","title":"title"},
+			{"name":"initials","required":"true","title":"initials"},
+			" (",
+			{"name":"first","title":"first name"},
+			") ",
+			{"name":"lastprefix"},
+			{"name":"last","required":"true","title":"lastname/sirname"}
+		], "prefix":"Name"},
+	{"name":"dayofbirth", "type":"date", "prefix": "Day of Birth", "maxDate":"today"},
+	{"name":"gender", "type":"select", "options":{"m":"male","f":"female","x":"other"}, "prefix": "Gender"},
+	{"name":"bsn","pattern":"[0-9]{4}[.]?[0-9]{2}[.]?[0-9]{3}","maxlength":"11","placeholder":"&curren;&curren;&curren;&curren;.&curren;&curren;.&curren;&curren;&curren;","prefix":"Social Service Number"},
+	{"name":"address[]","type":"set","multiple":"true","items":[
+			{"name":"street","title":"Street"},
+			{"name":"postcode","title":"Postcode"},
+			{"name":"city","title":"City"},
+			{"name":"country","list":"country","title":"Country","placeholder":"NL - Nederland"}
+		], "prefix":"Address"},
+	{"name":"phone[]","type":"phone","multiple":"true","prefix":"Phonenumber","placeholder":"+31 (0) ","pattern":"[+][0-9]{1,4}([ ]?[(][0-9]+[)][ ]?)?[0-9 ]+"},
+	{"name":"email[]","type":"email","multiple":"true","placeholder":"you@domain.ltd","prefix":"Emailaddress"},
+	{"name":"twitter[]","multiple":"true","pattern":"[@][A-Za-z0-9]{2,15}","placeholder":"@account","prefix":"Twitter"},
+	{"name":"facebook","type":"url","pattern":"http[s]?://www.facebook.com/[A-Za-z0-9.]{2,15}","placeholder":"https://www.facebook.com/","prefix":"Facebook"},
+	{"name":"skype","prefix":"Skype"},
+	"<!--divider-->",
+	{"id":"submit", "type":"submit", "class":"submit-button", "value":"Process"}
+  ],
+  "datalist": [
+	{"id":"users", "options":["administrator","webmaster","guest"]},
+	{"id":"roles", "options":["administrator","webmaster","editor","contributor","visitor"]},
+	{"id":"groups", "options":[""]},
+	{"id":"country", "options":["NL - Nederland","B - Belgi&euml;","D - Duitsland","UK - Verenigd Koninkrijk"]}
+  ],
+  "text": {"nl":[
+	{"name":"username", "prefix":"Gebruikersnaam", "description":"", "placeholder":"jouw gebruikersnaam"},
+	{"name":"password", "prefix":"Wachtwoord", "description":""},
+	{"id":"submit", "value":"Verwerken"},
+	{"option":"gender=m", "description":"man"},
+	{"option":"gender=f", "description":"vrouw"},
+	{"option":"gender=x", "description":"overige"},
+	{"name":"bsn","prefix":"Burgerservicenummer"}
+  ]},
+  "default-language":"en"
+}

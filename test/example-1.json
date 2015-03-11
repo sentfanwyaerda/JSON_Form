@@ -1,0 +1,18 @@
+{ "form":"authentication",
+  "action":"/authenticate.php",
+  "method":"POST",
+  "items":[
+	{"name":"username", "prefix":"Username", "required":"yes", "list":"users"},
+	{"name":"password", "type":"password", "prefix":"Password"},
+	{"id":"submit", "type":"submit", "class":"submit-button", "value":"Authenticate"}
+  ],
+  "datalist": [
+	{"id":"users", "options":["administrator","webmaster","guest"]}
+  ],
+  "text": {"nl":[
+	{"name":"username", "prefix":"Gebruikersnaam", "description":"", "placeholder":"jouw gebruikersnaam"},
+	{"name":"password", "prefix":"Wachtwoord", "description":""},
+	{"id":"submit", "value":"Aanmelden"}
+  ]},
+  "default-language":"en"
+}

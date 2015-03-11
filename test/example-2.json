@@ -1,0 +1,20 @@
+{ "form":"demonstrate",
+  "action":"/demo.php",
+  "method":"GET",
+  "items":[
+	{"name":"username", "type":"text", "prefix":"Username", "required":"yes", "list":"users"},
+	{"name":"password", "type":"password", "prefix":"Password"},
+	{"name":"remember", "type":"checkbox", "value":"yes", "label":"stay authenticated"},
+	{"name":"color","type":"radio","items":["red","blue","green"], "prefix":"theme color"},
+	{"id":"submit", "type":"submit", "class":"submit-button", "value":"Authenticate"}
+  ],
+  "datalist": [
+	{"id":"users", "options":["administrator","webmaster","guest"]}
+  ],
+  "text": {"nl":[
+	{"name":"username", "prefix":"Gebruikersnaam", "description":"", "placeholder":"jouw gebruikersnaam"},
+	{"name":"password", "prefix":"Wachtwoord", "description":""},
+	{"id":"submit", "value":"Aanmelden"}
+  ]},
+  "default-language":"en"
+}
