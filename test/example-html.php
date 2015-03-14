@@ -14,7 +14,7 @@ print '<link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothnes
 <script src="http://aehlke.github.io/tag-it/js/tag-it.js" type="text/javascript" charset="utf-8"></script>
 <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/smoothness/jquery-ui.css">
 <link href="http://aehlke.github.io/tag-it/css/jquery.tagit.css" rel="stylesheet" type="text/css">'."\n\n";
-print '<style>fieldset { display: inline; width: 325px; } span.item { width: 325px; x-text-align: right; display: block; } div.set span.item { display: inline; } span.prefix { x-width: 100px; display: inline-block; x-float: left; text-align: left; } span.prefix:after { content: \':\' } span.input-tag-it span.prefix, span.input-tag-it span.postfix {display: block; float: none; width: 100%; } ul.tagit {margin: 0; } .ui-widget { font-size: 12px; } </style>'."\n\n";
+print '<style>fieldset { display: inline; width: 325px; } span.item { width: 325px; x-text-align: right; display: block; } div.set span.item { display: inline; } span.prefix { width: 175px; display: inline-block; x-float: left; text-align: left; } span.prefix:after { content: \':\' } span.input-tag-it span.prefix, span.input-tag-it span.postfix {display: block; float: none; width: 100%; } ul.tagit {margin: 0; } input { max-width: 150px;} .ui-widget { font-size: 12px; } </style>'."\n\n";
 
 print $JF->generate_html((isset($_GET['l']) ? $_GET['l'] : NULL));
 

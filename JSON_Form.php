@@ -87,7 +87,8 @@ class JSON_Form{
 				$subjectname = (isset($item['name']) ? ($parentname !== FALSE ? $parentname.'['.$item['name'].']' : $item['name']) : FALSE);
 				$str .= '<div class="set '.(isset($item['name']) ? 'f-'.$item['name'] : NULL).'">';
 				if(isset($item['prefix'])){ $str .= '<span class="prefix">'.$this->get_text($id, 'prefix', $language, $item['prefix']).'</span>'; }
-				if(isset($item['items']) && is_array($item['items'])){ $str .= $this->_generate_html_item($item['items'], $language, $subjectname); }
+				if(isset($item['multiple']) && strtolower($item['multiple']) == 'true'){ $str .= '[+]'; }
+				if(isset($item['items']) && is_array($item['items'])){ $str .= $this->_generate_html_item($item['items'], $language, $subjectname.((isset($item['multiple']) && strtolower($item['multiple']) == 'true') ? '[0]' : NULL)); }
 				if(isset($item['postfix'])){ $str .= '<span class="postfix">'.$this->get_text($id, 'postfix', $language, $item['postfix']).'</span>'; }
 				$str .= '</div>'."\n";
 			}
@@ -156,12 +157,14 @@ class JSON_Form{
 					}
 				}
 				else{
+					if(isset($item['multiple']) && strtolower($item['multiple']) == 'true'){ $str .= '[+]'; }
+					
 					$str .= '<input';
-					if(isset($item['name'])){ $str .= ' name="'.$subjectname.'"'; }
+					if(isset($item['name'])){ $str .= ' name="'.$subjectname.((isset($item['multiple']) && strtolower($item['multiple']) == 'true') ? '[0]' : NULL).'"'; }
 					foreach(array('id','type','class','style','placeholder','list','required','disabled','readonly','autocomplete','pattern','maxlength') as $tag){
 						if(isset($item[$tag]) || $this->get_text($id, $tag, $language) != NULL){ $str .= ' '.$tag.'="'.$this->get_text($id, $tag, $language, $item[$tag]).'"'; }
 					}
-					if((isset($item['name']) || isset($item['id'])) && !(isset($item['value']) && $item['value'] == FALSE)){ $str .= ' value="{'.$subjectname.'|'.$this->get_text($id, 'value', $language, $item['value']).'}"'; }
+					if((isset($item['name']) || isset($item['id'])) && !(isset($item['value']) && $item['value'] == FALSE)){ $str .= ' value="{'.$subjectname.((isset($item['multiple']) && strtolower($item['multiple']) == 'true') ? '[0]' : NULL).'|'.$this->get_text($id, 'value', $language, $item['value']).'}"'; }
 					if(in_array(strtolower($item['type']), array('checkbox')) ){ $str .= ' {'.$subjectname.'=='.$item['value'].'?checked="true":} ';}
 					$str .= ' />';
 				}
