@@ -4,8 +4,13 @@
   "items":[
 	{"name":"username", "type":"text", "prefix":"Username", "required":"yes", "list":"users"},
 	{"name":"password", "type":"password", "prefix":"Password"},
-	{"name":"remember", "type":"checkbox", "value":"yes", "label":"stay authenticated"},
-	{"name":"color","type":"radio","items":["red","blue","green"], "prefix":"theme color"},
+	{"type":"set", "items":[
+			{"name":"remember", "type":"checkbox", "value":"yes", "label":"stay authenticated"},
+			", ",
+			{"name":"until",    "type":"date", "minDate":"today", "prefix":"until"}
+		]},
+	{"name":"color",    "type":"radio","items":["red","blue","green"], "prefix":"theme color"},
+	{"name":"message",  "type":"textarea", "prefix":"Message"},
 	{"id":"submit", "type":"submit", "class":"submit-button", "value":"Authenticate"}
   ],
   "datalist": [

@@ -120,7 +120,17 @@ class JSON_Form{
 				
 				if(isset($item['prefix'])){ $str .= '<span class="prefix">'.$this->get_text($id, 'prefix', $language, $item['prefix']).'</span>'; }
 				
-				if(isset($item['type']) && strtolower($item['type']) == 'select'){
+				if(isset($item['type']) && strtolower($item['type']) == 'textarea'){
+					$str .= '<textarea';
+					if(isset($item['name'])){ $str .= ' name="'.$subjectname.'"'; }
+					foreach(array('id','class','style','required','disabled','readonly') as $tag){
+						if(isset($item[$tag]) || $this->get_text($id, $tag, $language) != NULL){ $str .= ' '.$tag.'="'.$this->get_text($id, $tag, $language, $item[$tag]).'"'; }
+					}
+					$str .= '>';
+					if((isset($item['name']) || isset($item['id'])) && !(isset($item['value']) && $item['value'] == FALSE)){ $str .= '{'.$subjectname.'|'.$this->get_text($id, 'value', $language, $item['value']).'}'; }
+					$str .= '</textarea>';
+				}
+				elseif(isset($item['type']) && strtolower($item['type']) == 'select'){
 					$str .= '<select ';
 					if(isset($item['name'])){ $str .= ' name="'.$subjectname.'"'; }
 					foreach(array('id','class','style','required','disabled','readonly') as $tag){
@@ -129,7 +139,7 @@ class JSON_Form{
 					$str .= '>';
 					$oi = 0;
 					if(isset($item['options']) && is_array($item['options'])){ foreach($item['options'] as $o=>$v){
-						$str .= '<option value="'.($o !== $oi ? $o : $v).'"'.' {'.$subjectname.'=='.($o !== $oi ? $o : $v).'?selected=true:}'.( /*$o != $oi && */ $this->get_text(array('option'=>$subjectname.'='.($o !== $oi ? $o : $v)), 'description', $language, $v) != NULL ? '>'.$this->get_text(array('option'=>$subjectname.'='.($o !== $oi ? $o : $v)), 'description', $language, $v).'</option>' : '/>'); $oi++;
+						$str .= '<option value="'.($o !== $oi ? $o : $v).'" {'.$subjectname.'=='.($o !== $oi ? $o : $v).'?selected=true:}'.( /*$o != $oi && */ $this->get_text(array('option'=>$subjectname.'='.($o !== $oi ? $o : $v)), 'description', $language, $v) != NULL ? '>'.$this->get_text(array('option'=>$subjectname.'='.($o !== $oi ? $o : $v)), 'description', $language, $v).'</option>' : '/>'); $oi++;
 					}}
 					$str .= '</select>';
 				}
@@ -141,7 +151,7 @@ class JSON_Form{
 						foreach(array('type','class','style','required','disabled','readonly') as $tag){
 							if(isset($item[$tag]) || $this->get_text($id, $tag, $language) != NULL){ $str .= ' '.$tag.'="'.$this->get_text($id, $tag, $language, $item[$tag]).'"'; }
 						}
-						$str .= ' id="'.$subjectname.'-'.($o !== $oi ? $o : $v).'" /><label for="'.$subjectname.'-'.($o !== $oi ? $o : $v).'">'.$this->get_text(array('option' => $subjectname.'-'.($o !== $oi ? $o : $v)), 'value', $language, $v).'</label>';
+						$str .= ' id="'.$subjectname.'-'.($o !== $oi ? $o : $v).'" {'.$subjectname.'=='.($o !== $oi ? $o : $v).'?selected=true:}  value="'.($o !== $oi ? $o : $v).'" /><label for="'.$subjectname.'-'.($o !== $oi ? $o : $v).'">'.$this->get_text(array('option' => $subjectname.'-'.($o !== $oi ? $o : $v)), 'value', $language, $v).'</label>';
 						$oi++;
 					}
 				}
@@ -152,6 +162,7 @@ class JSON_Form{
 						if(isset($item[$tag]) || $this->get_text($id, $tag, $language) != NULL){ $str .= ' '.$tag.'="'.$this->get_text($id, $tag, $language, $item[$tag]).'"'; }
 					}
 					if((isset($item['name']) || isset($item['id'])) && !(isset($item['value']) && $item['value'] == FALSE)){ $str .= ' value="{'.$subjectname.'|'.$this->get_text($id, 'value', $language, $item['value']).'}"'; }
+					if(in_array(strtolower($item['type']), array('checkbox')) ){ $str .= ' {'.$subjectname.'=='.$item['value'].'?checked="true":} ';}
 					$str .= ' />';
 				}
 				
