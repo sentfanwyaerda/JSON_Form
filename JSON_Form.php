@@ -69,26 +69,27 @@ class JSON_Form{
 		$str .= '<script type="text/javascript">$.datepicker.setDefaults($.datepicker.regional[\''.$this->get_language().'\']);</script>';
 		
 		$str .= '<fieldset class="main'.(isset($this->db["form"]) ? ' '.$this->db["form"] : NULL).'">'."\n";
-		$str .= $this->_generate_html_item($this->db["items"], $language);
+	$str .= $this->_generate_html_item($this->db["items"], $language, FALSE, $this->db["form"]);
 		$str .= '</fieldset>'."\n";
 		
 		$str .= '</form>';
 		/*fix*/ $str = preg_replace("#\{\|([^\}]+)\}#i", "\\1", $str);
-		/*fix*/ $str = preg_replace("#<!--\s*divider\s*-->#i", '</fieldset>'."\n".'<fieldset class="main'.(isset($this->db["form"]) ? ' '.$this->db["form"] : NULL).'">'."\n", $str);
+		/*fix*/ $str = preg_replace("#(<span class=\"text\">)?<!--\s*divider\s*-->(</span>)?#i", '</fieldset>'."\n".'<fieldset class="main'.(isset($this->db["form"]) ? ' '.$this->db["form"] : NULL).'">', $str);
 		return $str;
 	}
-	function _generate_html_item($items=array(), $language=NULL, $parentname=FALSE){
+	function _generate_html_item($items=array(), $language=NULL, $parentname=FALSE, $formname=NULL){
 		$str = NULL;
 		foreach($items as $i=>$item){
-			if(!is_array($item)){ $str .= $item."\n"; }
+			if(!is_array($item)){ $str .= '<span class="text">'.$item."</span>\n"; }
 			elseif(isset($item['type']) && strtolower($item['type']) == 'set'){
 				$first = array_shift(array_keys($item));
 				$id = array($first => $item[$first]);
 				$subjectname = (isset($item['name']) ? ($parentname !== FALSE ? $parentname.'['.$item['name'].']' : $item['name']) : FALSE);
 				$str .= '<div class="set '.(isset($item['name']) ? 'f-'.$item['name'] : NULL).'">';
 				if(isset($item['prefix'])){ $str .= '<span class="prefix">'.$this->get_text($id, 'prefix', $language, $item['prefix']).'</span>'; }
-				if(isset($item['multiple']) && strtolower($item['multiple']) == 'true'){ $str .= '[+]'; }
-				if(isset($item['items']) && is_array($item['items'])){ $str .= $this->_generate_html_item($item['items'], $language, $subjectname.((isset($item['multiple']) && strtolower($item['multiple']) == 'true') ? '[0]' : NULL)); }
+				if(isset($item['multiple']) && strtolower($item['multiple']) == 'true'){ $str .= '<input type="button" value="+" onClick="addInput_'.md5($subjectname).'();" class="plus right" />'; }
+				if(isset($item['items']) && is_array($item['items'])){ $str .= $this->_generate_html_item($item['items'], $language, $subjectname.((isset($item['multiple']) && strtolower($item['multiple']) == 'true') ? '[0]' : NULL), $formname); }
+				if(isset($item['multiple']) && strtolower($item['multiple']) == 'true'){ $str .= '<span id="addI'.md5($subjectname).'"></span>'; }
 				if(isset($item['postfix'])){ $str .= '<span class="postfix">'.$this->get_text($id, 'postfix', $language, $item['postfix']).'</span>'; }
 				$str .= '</div>'."\n";
 			}
@@ -157,7 +158,7 @@ class JSON_Form{
 					}
 				}
 				else{
-					if(isset($item['multiple']) && strtolower($item['multiple']) == 'true'){ $str .= '[+]'; }
+					if(isset($item['multiple']) && strtolower($item['multiple']) == 'true'){ $str .= '<input type="button" value="+" onClick="addInput_'.md5($subjectname).'();" class="plus right" />'; }
 					
 					$str .= '<input';
 					if(isset($item['name'])){ $str .= ' name="'.$subjectname.((isset($item['multiple']) && strtolower($item['multiple']) == 'true') ? '[0]' : NULL).'"'; }
@@ -167,6 +168,27 @@ class JSON_Form{
 					if((isset($item['name']) || isset($item['id'])) && !(isset($item['value']) && $item['value'] == FALSE)){ $str .= ' value="{'.$subjectname.((isset($item['multiple']) && strtolower($item['multiple']) == 'true') ? '[0]' : NULL).'|'.$this->get_text($id, 'value', $language, $item['value']).'}"'; }
 					if(in_array(strtolower($item['type']), array('checkbox')) ){ $str .= ' {'.$subjectname.'=='.$item['value'].'?checked="true":} ';}
 					$str .= ' />';
+					if(isset($item['multiple']) && strtolower($item['multiple']) == 'true'){
+						$str .= '<span id="addI'.md5($subjectname).'"></span>'."\n";
+						$str .= '<script>'."\n";
+						$str .= 'var counter_'.md5($subjectname).' = 1;
+						function addInput_'.md5($subjectname).'(value, add=true){
+							var newdiv = document.createElement(\'span\');
+							if(typeof value == \'undefined\'){ value = \'\'; }
+							if(add != true && value == \'\'){ return false; }
+							newdiv.innerHTML = "<input form=\''.$formname.'\'';
+							if(isset($item['name'])){ $str .= ' name=\''.$subjectname.'[" + counter_'.md5($subjectname).' + "]'.'\''; }
+							foreach(array('type','class','style','placeholder','list','required','disabled','readonly','autocomplete','pattern','maxlength') as $tag){
+								if(isset($item[$tag]) || $this->get_text($id, $tag, $language) != NULL){ $str .= ' '.$tag.'=\''.$this->get_text($id, $tag, $language, $item[$tag]).'\''; }
+							}
+							$str .= ' value=\'" + value + "\'';
+						$str .= '/>";
+							document.getElementById(\'addI'.md5($subjectname).'\').appendChild(newdiv);
+							counter_'.md5($subjectname).'++;
+						}'."\n";
+						for($q=1;$q<=3;$q++){ $str .= 'addInput_'.md5($subjectname).'(\'{'.$subjectname.'['.$q.']|'.$this->get_text($id, 'value', $language, $item['value']).'}\', false);'."\n"; }
+						$str .= '</script>'."\n";
+					}
 				}
 				
 				if(isset($item['label'])){ $str .= '<label class="postfix"'.(isset($item['id']) ? ' for="'.$item['id'].'"' : NULL).'>'.$this->get_text($id, 'label', $language, $item['label']).'</label>'; }

@@ -1,0 +1,45 @@
+fieldset { display: inline; width: 325px; vertical-align: top; border: 0px; }
+span.item { width: 325px; x-text-align: right; display: block; }
+div.set span.item { display: inline; }
+span.prefix { width: 125px; display: inline-block; x-float: left; text-align: left; }
+span.prefix:after { content: ':' }
+span.input-tag-it span.prefix, span.input-tag-it span.postfix {display: block; float: none; width: 100%; }
+ul.tagit {margin: 0; }
+input { max-width: 150px;}
+
+/* FIXES */
+.ui-widget { font-size: 12px; }
+.tagit, .tagit *, .tagit-label, .tagit-choice, .tagit-label, ul.tagit, ul.tagit li { font-size: 12px; font-weight: none; padding: 1px; margin: 0; }
+
+/* PROFILE */
+.profile { max-width: 600px; }
+.profile td { vertical-align: top; }
+.profile .max { width: 100%; }
+.profile .space-above { margin-top: 5px; }
+.profile .nowrap { white-space: nowrap; }
+.profile input[readonly] { color: #999999; }
+.profile td.divider { width: 40px; }
+.profile input[name="name[title]"] { width: 32px; }
+.profile input[name="name[initials]"], .profile input[name="name[lastprefix]"] { width: 50px; }
+.profile input[name="username"], .profile input[name="dayofbirth"], .profile input[name="member-since"], .profile input[name="bsn"], .profile input[name="name[first]"] { width: 75px; }
+.profile input[name$="postcode]"] { width: 55px; }
+.profile input[name="name[last]"], .profile input[name$="city]"] { width: 145px; }
+.profile input[name^="twitter"], .profile .half { width: 100px; }
+.profile input[name^="phone"], .profile input[name$="street]"], .profile input[name$="country]"] { width: 200px; }
+.profile input[name^="email"] { width: 200px; }
+.profile input[name^="twitter"]:before { content: "@"; }
+.profile input[type="button"], .profile input[type="submit"], .profile input[type="reset"] { cursor: pointer; border: 1px solid #999; 
+	text-shadow: 2px 2px 3px rgba(33,33,33,0.3); box-shadow: 2px 2px 3px rgba(33,33,33,0.3); margin: 3px; padding: 1px; 
+	border-radius: 4px; background-color: rgba(196,196,196,0.8);  }
+.profile input.plus { width: 21px; margin: 0; padding: 0; background-color: rgba(225,225,225,0.8); font-weight: bold; }
+.profile input.red { background-color: rgba(196,0,0,0.8); color: white; }
+.profile input.red[readonly] { background-color: rgba(196,0,0,0.3); color: #EEE; font-weight: normal; cursor: default; }
+.profile input.bold, .profile input[readonly] { font-weight: bold; }
+.plus.right { padding-left: -30px; }
+
+
+.profile input { border: 1px solid #DDD; 
+	padding: 3px; 
+	border-radius: 4px; background-color: rgba(240,240,240,0.2);
+	color: #444;
+	}

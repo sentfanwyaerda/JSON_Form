@@ -34,7 +34,9 @@
 	{"name":"facebook","type":"url","pattern":"http[s]?://www.facebook.com/[A-Za-z0-9.]{2,15}","placeholder":"https://www.facebook.com/","prefix":"Facebook"},
 	{"name":"skype","prefix":"Skype"},
 	"<!--divider-->",
-	{"id":"submit", "type":"submit", "class":"submit-button", "value":"Process"}
+	{"id":"submit", "type":"submit", "class":"submit-button bold", "value":"Process"},
+	{"id":"reset", "type":"reset", "value":"Restore"},
+	{"id":"delete", "type":"button", "class":"red", "value":"Delete", "onClick":"window.location.href='/management.php?delete='+this.form.username.value;", "readonly":"true"}
   ],
   "datalist": [
 	{"id":"users", "options":["administrator","webmaster","guest"], "rule":"suggestion"},
