@@ -1,7 +1,8 @@
 fieldset { display: inline; width: 325px; vertical-align: top; border: 0px; }
 span.item { width: 325px; x-text-align: right; display: block; }
 div.set span.item { display: inline; }
-span.prefix { width: 125px; display: inline-block; x-float: left; text-align: left; }
+span.item input { display: inline-block; }
+span.prefix { width: 125px; height: 100%; display: inline-block; x-float: left; text-align: left; }
 span.prefix:after { content: ':' }
 span.input-tag-it span.prefix, span.input-tag-it span.postfix {display: block; float: none; width: 100%; }
 ul.tagit {margin: 0; }
@@ -27,7 +28,7 @@ input { max-width: 150px;}
 .profile input[name^="twitter"], .profile .half { width: 100px; }
 .profile input[name^="phone"], .profile input[name$="street]"], .profile input[name$="country]"] { width: 200px; }
 .profile input[name^="email"] { width: 200px; }
-.profile input[name^="twitter"]:before { content: "@"; }
+.profile input[name^="twitter"]:before { content: "@" }
 .profile input[type="button"], .profile input[type="submit"], .profile input[type="reset"] { cursor: pointer; border: 1px solid #999; 
 	text-shadow: 2px 2px 3px rgba(33,33,33,0.3); box-shadow: 2px 2px 3px rgba(33,33,33,0.3); margin: 3px; padding: 1px; 
 	border-radius: 4px; background-color: rgba(196,196,196,0.8);  }
