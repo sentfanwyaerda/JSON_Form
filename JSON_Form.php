@@ -1,12 +1,29 @@
 <?php 
+if(file_exists(dirname(dirname(__FILE__)).'/JSONplus/JSONplus.php')){ require_once(dirname(dirname(__FILE__)).'/JSONplus/JSONplus.php'); }
+/*
+if(!class_exists('JSONplus')){
+	class JSONplus {
+		function encode($value, $options=0, $depth=512){
+			return json_encode($value, $options, $depth);
+		}
+		function decode($json, $assoc=FALSE, $depth=512, $options=0){
+			if(isset($options) && !($options===0) ) return json_decode($json, $assoc, $depth, $options);
+			if(isset($depth) && !($depth===512) ) return json_decode($json, $assoc, $depth);
+			if(isset($assoc) && !($assoc===FALSE) ) return json_decode($json, $assoc);
+			return json_decode($json);
+		}
+	}
+}
+*/
+
 class JSON_Form{
 	var $db = array();
 	function load($json, $load_file=FALSE){
 		if($load_file !== FALSE && file_exists($json)){ $json = file_get_contents($json); }
-		$this->db = json_decode($json, TRUE);
+		$this->db = JSONplus::decode($json, TRUE);
 	}
 	function export(){
-		$json = json_encode($this->db);
+		$json = JSONplus::encode($this->db);
 		return $json;
 	}
 	
@@ -60,11 +77,13 @@ class JSON_Form{
 		
 		foreach($this->db["datalist"] as $i=>$datalist){
 			$str .= '<datalist id="'.$datalist['id'].'">';
+			$doset = array();
 			foreach($datalist['options'] as $j=>$option){
 				$str .= '<option value="'.$option.'" />';
+				$doset[] = $option;
 			}
 			$str .= '</datalist>'."\n";
-			$str .= '<script type="text/javascript">'.$datalist['id'].'Tags = '.json_encode($datalist['options']).';</script>'."\n";
+			$str .= '<script type="text/javascript">'.$datalist['id'].'Tags = '.json_encode($doset /*$datalist['options']*/).';</script>'."\n";
 		}
 		$str .= '<script type="text/javascript">$.datepicker.setDefaults($.datepicker.regional[\''.$this->get_language().'\']);</script>';
 		
@@ -81,10 +100,10 @@ class JSON_Form{
 		$str = NULL;
 		foreach($items as $i=>$item){
 			if(!is_array($item)){ $str .= '<span class="text">'.$item."</span>\n"; }
-			elseif(isset($item['type']) && strtolower($item['type']) == 'set'){
+			elseif(isset($item['type']) && in_array(strtolower($item['type']), array('set','group'))){
 				$first = array_shift(array_keys($item));
 				$id = array($first => $item[$first]);
-				$subjectname = (isset($item['name']) ? ($parentname !== FALSE ? $parentname.'['.$item['name'].']' : $item['name']) : FALSE);
+				$subjectname = (isset($item['name']) ? ($parentname !== FALSE && strlen($parentname) > 0 ? $parentname.'['.$item['name'].']' : $item['name']) : FALSE);
 				$str .= '<div class="set '.(isset($item['name']) ? 'f-'.$item['name'] : NULL).'">';
 				if(isset($item['prefix'])){ $str .= '<span class="prefix">'.$this->get_text($id, 'prefix', $language, $item['prefix']).'</span>'; }
 				if(isset($item['multiple']) && strtolower($item['multiple']) == 'true'){ $str .= '<input type="button" value="+" onClick="addInput_'.md5($subjectname).'();" class="plus right" />'; }
@@ -96,7 +115,7 @@ class JSON_Form{
 			else{
 				$first = array_shift(array_keys($item));
 				$id = array($first => $item[$first]);
-				$subjectname = (isset($item['name']) ? ($parentname !== FALSE ? $parentname.'['.$item['name'].']' : $item['name']) : FALSE);
+				$subjectname = (isset($item['name']) ? ($parentname !== FALSE && strlen($parentname) > 0 ? $parentname.'['.$item['name'].']' : $item['name']) : FALSE);
 				
 				$str .= '<span class="item '.(isset($item['name']) ? 'f-'.$item['name'] : NULL).' '.(isset($item['type']) ? 'input-'.$item['type'] : NULL).'"';
 				$str .= '>';
@@ -113,7 +132,7 @@ class JSON_Form{
 						foreach(array_merge(array_keys($datepicker), array('altField','altFormat','appendText','autoSize','beforeShow','beforeShowDay','buttonImage','buttonImageOnly','buttonText','calculateWeek','changeMonth','changeYear','closeText','constrainInput','currentText','dateFormat','dayNames','dayNamesMin','dayNamesShort','defaultDate','duration','firstDay','gotoCurrent','hideIfNoPrevNext','isRTL','maxDate','minDate','monthNames','monthNamesShort','navigationAsDateFormat','nextText','numberOfMonths','onChangeMonthYear','onClose','onSelect','prevText','selectOtherMonths','shortYearCutoff','showAnim','showButtonPanel','showCurrentAtPos','showMonthAfterYear','showOn','showOptions','showOtherMonths','showWeek','stepMonths','weekHeader','yearRange','yearSuffix')) as $df){
 							if(isset($item[$df])){ $datepicker[$df] = $item[$df]; }
 						}
-						$str .= '<script type="text/javascript">$(function () { $("#'.$item['id'].'").datepicker('.json_encode($datepicker).'); });</script>';
+						$str .= '<script type="text/javascript">$(function () { $("#'.$item['id'].'").datepicker('.JSONplus::encode($datepicker).'); });</script>';
 						break;
 					case 'checkbox': if(!isset($item['id'])){ $item['id'] = $item['name']; } break;
 					case 'radio': break;
@@ -160,14 +179,21 @@ class JSON_Form{
 				else{
 					if(isset($item['multiple']) && strtolower($item['multiple']) == 'true'){ $str .= '<input type="button" value="+" onClick="addInput_'.md5($subjectname).'();" class="plus right" />'; }
 					
+					if(isset($item['field-prefix']) || isset($item['field-postfix'])){ $str .= '<label class="currencyinput">'.(isset($item['field-prefix']) ? $item['field-prefix'] : NULL); }
+					
 					$str .= '<input';
 					if(isset($item['name'])){ $str .= ' name="'.$subjectname.((isset($item['multiple']) && strtolower($item['multiple']) == 'true') ? '[0]' : NULL).'"'; }
-					foreach(array('id','type','class','style','placeholder','list','required','disabled','readonly','autocomplete','pattern','maxlength') as $tag){
+					foreach(array('id','type','class','style','placeholder','list','required','disabled','readonly','autocomplete','pattern','maxlength','data-symbol','min','max','step','alt') as $tag){
 						if(isset($item[$tag]) || $this->get_text($id, $tag, $language) != NULL){ $str .= ' '.$tag.'="'.$this->get_text($id, $tag, $language, $item[$tag]).'"'; }
 					}
 					if((isset($item['name']) || isset($item['id'])) && !(isset($item['value']) && $item['value'] == FALSE)){ $str .= ' value="{'.$subjectname.((isset($item['multiple']) && strtolower($item['multiple']) == 'true') ? '[0]' : NULL).'|'.$this->get_text($id, 'value', $language, $item['value']).'}"'; }
 					if(in_array(strtolower($item['type']), array('checkbox')) ){ $str .= ' {'.$subjectname.'=='.$item['value'].'?checked="true":} ';}
 					$str .= ' />';
+					
+					
+					if(isset($item['field-prefix']) || isset($item['field-postfix'])){ $str .= (isset($item['field-postfix']) ? $item['field-postfix'] : NULL).'</label>'; }
+					
+					
 					if(isset($item['multiple']) && strtolower($item['multiple']) == 'true'){
 						$str .= '<span id="addI'.md5($subjectname).'"></span>'."\n";
 						$str .= '<script>'."\n";

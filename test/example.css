@@ -1,12 +1,42 @@
-fieldset { display: inline; width: 325px; vertical-align: top; border: 0px; }
-span.item { width: 325px; x-text-align: right; display: block; }
+fieldset { display: inline; min-width: 325px; vertical-align: top; border: 0px; }
+span.item { min-width: 325px; x-text-align: right; display: block; }
 div.set span.item { display: inline; }
-span.item input { display: inline-block; }
-span.prefix { width: 125px; height: 100%; display: inline-block; x-float: left; text-align: left; }
+/* span.item input { display: inline-block; } */
+span.prefix { width: 155px; max-height: 100%; display: inline-block; x-float: left; text-align: left; }
 span.prefix:after { content: ':' }
 span.input-tag-it span.prefix, span.input-tag-it span.postfix {display: block; float: none; width: 100%; }
 ul.tagit {margin: 0; }
 input { max-width: 150px;}
+
+input[type=""], input[type="text"], input[type="date"], input[type="number"], input[type="double"], input[type="valuta"] { border: 1px inset #ccc; }
+input[type="valuta"]:before {
+  content: attr(data-symbol);
+  color: #666666;
+  width: 15px;
+}
+input[type="date"]:after {
+  content: '[=]'
+}
+input[type="number"], input[type="double"], input[type="valuta"] { text-align: right; }
+.currencyinput {
+    border: 1px inset #ccc;
+	padding: 2px 3px 2px 3px;
+	color: #666666;
+	font-size: 0.8em;
+}
+.currencyinput input {
+    border: 0;
+}
+/* hides the spin-button for firefox */
+input[type=number] {
+    -moz-appearance:textfield;
+}
+/* hides the spin-button for chrome*/
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 
 /* FIXES */
 .ui-widget { font-size: 12px; }

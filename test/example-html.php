@@ -1,4 +1,5 @@
 <?php 
+define("JSONplus_DATALIST_ROOT", "/home/eerlijkeverkiezingen/library/demografie/data/_datalist_/");
 require_once(dirname(dirname(__FILE__)).'/JSON_Form.php');
 
 $json = dirname(__FILE__).'/example-'.(isset($_GET['e']) && preg_match("#^[0-9]$#i", $_GET['e']) ? $_GET['e'] : '1').'.json';
@@ -18,7 +19,7 @@ print '<link rel="stylesheet" type="text/css" href="example.css">'."\n\n";
 
 print $JF->generate_html((isset($_GET['l']) ? $_GET['l'] : NULL));
 
-print '<pre>'.file_get_contents($json).'</pre>';
+print '<pre>'.htmlentities(file_get_contents($json)).'</pre>';
 
 print "\n\n".'<br/><br/>Examples: <a href="?e=1">One</a>, <a href="?e=2">Two</a>, <a href="?e=3">Three</a>; <a href="?'.(isset($_GET['e']) ? 'e='.$_GET['e'].'&' : NULL).'l=nl">(in Dutch)</a>';
 
